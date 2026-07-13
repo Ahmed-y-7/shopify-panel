@@ -37,10 +37,3 @@ python app.py selftest             # run the built-in checks (no network)
 
 Revenue reports exclude refunded/voided orders and group days/months in the
 store's timezone (`TZ` in `app.py`, default UTC+3).
-
-## Notes
-
-- `.env`, `shopify.db`, and generated dashboards are gitignored — they contain
-  store credentials and data. Never commit them.
-- Each sync fully reloads the database in one transaction, so records deleted
-  in Shopify disappear and a failed sync leaves the previous data intact.
