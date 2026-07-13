@@ -1,0 +1,5 @@
+.env
+shopify.db
+dashboard.html
+shopify.xlsx
+__pycache__/
