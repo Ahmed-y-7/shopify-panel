@@ -4,6 +4,7 @@ Usage:
   python app.py sync                 # pull products, inventory, orders into shopify.db
   python app.py report bestsellers   # top products by units sold
   python app.py report lowstock      # variants at/below LOW_STOCK threshold
+  python app.py report outofstock    # products with every variant at 0
   python app.py report revenue       # daily + monthly revenue
   python app.py dashboard            # write dashboard.html (charts) and open it
   python app.py excel                # export shopify.xlsx (data + dashboard sheet)
@@ -192,6 +193,13 @@ REPORTS = {
             FROM variants v JOIN products p ON p.id = v.product_id
             WHERE v.inventory <= {LOW_STOCK} AND p.status = 'ACTIVE'
             ORDER BY v.inventory""",
+    ),
+    "outofstock": (
+        "Active products with every variant at 0 inventory",
+        """SELECT p.title, COUNT(*) variants
+           FROM products p JOIN variants v ON v.product_id = p.id
+           WHERE p.status = 'ACTIVE'
+           GROUP BY p.id HAVING MAX(v.inventory) <= 0 ORDER BY p.title""",
     ),
     "revenue": (
         "Revenue by day (last 30) and by month",
@@ -452,6 +460,8 @@ def selftest():
     assert best == ("Mug", 3, 30.0), best
     low = db.execute(REPORTS["lowstock"][1]).fetchone()
     assert low == ("Mug", "Default", "MUG-1", 2), low
+    # Mug still has 2 units, so it must NOT appear as out of stock
+    assert db.execute(REPORTS["outofstock"][1]).fetchone() is None
     day = db.execute(REPORTS["revenue"][1]).fetchone()
     assert day == ("2026-07-02", 1, 30.0), day
     month = db.execute(REVENUE_MONTHLY).fetchone()

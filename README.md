@@ -29,6 +29,7 @@ automatically on every run (client credentials grant).
 python app.py sync                 # pull store data into shopify.db
 python app.py report bestsellers   # top products by units sold
 python app.py report lowstock      # variants at/below the LOW_STOCK threshold
+python app.py report outofstock    # products with every variant at 0
 python app.py report revenue       # daily + monthly revenue
 python app.py dashboard            # write dashboard.html and open it
 python app.py excel                # export shopify.xlsx (data + dashboard)
