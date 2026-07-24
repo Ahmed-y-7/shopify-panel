@@ -1,5 +1,5 @@
 .env
 shopify.db
 dashboard.html
-shopify.xlsx
+*.xlsx
 __pycache__/
